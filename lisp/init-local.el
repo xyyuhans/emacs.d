@@ -131,5 +131,14 @@
     (interactive)
     (anki-editor-cloze-region arg "")))
 
+(use-package org-wild-notifier
+  :ensure t
+  :custom
+  (org-wild-notifier-alert-time '(0))
+  (org-wild-notifier-keyword-whitelist nil)
+  :config
+  (org-wild-notifier-mode)
+  (setq alert-default-style 'libnotify))
+
 (provide 'init-local)
 ;;; init-local.el ends here
