@@ -182,5 +182,9 @@
 (use-package ein
   :ensure t)
 
+;; https://emacs.stackexchange.com/questions/56050/problem-with-use-package-and-matlab-mode-cannot-load
+(use-package matlab
+  :ensure matlab-mode)
+
 (provide 'init-local)
 ;;; init-local.el ends here
