@@ -179,5 +179,8 @@
   :custom
   (org-hugo-section "post"))
 
+(use-package ein
+  :ensure t)
+
 (provide 'init-local)
 ;;; init-local.el ends here
