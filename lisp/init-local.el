@@ -203,5 +203,15 @@
   (pdf-loader-install)
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-view-mode)))
 
+(use-package nov
+  :ensure t
+  :custom
+  ;; copy text without truncate
+  (nov-text-width t)
+  :config
+  ;; open epub in this mode
+  ;; https://depp.brause.cc/nov.el/
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+
 (provide 'init-local)
 ;;; init-local.el ends here
