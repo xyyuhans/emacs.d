@@ -173,5 +173,11 @@
   ;; Default. Directed Graph
   (setq org-mind-map-engine "dot"))
 
+(use-package ox-hugo
+  :ensure t
+  :after ox
+  :custom
+  (org-hugo-section "post"))
+
 (provide 'init-local)
 ;;; init-local.el ends here
