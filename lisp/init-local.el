@@ -186,5 +186,22 @@
 (use-package matlab
   :ensure matlab-mode)
 
+(use-package org-noter
+  :ensure t
+  :custom
+  (org-noter-doc-split-fraction '(0.65 . 0.5))
+  ;; https://github.com/weirdNox/org-noter/issues/80
+  ;; location saved in org file, open from org file works, open from pdf doesn't work
+  (org-noter-auto-save-last-location 1))
+
+(use-package pdf-tools
+  :ensure t
+  :custom
+  (pdf-view-display-size 'fit-width)
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto-Major-Mode.html
+  :config
+  (pdf-loader-install)
+  (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-view-mode)))
+
 (provide 'init-local)
 ;;; init-local.el ends here
