@@ -120,5 +120,16 @@
         auto-package-update-interval 7)
   (auto-package-update-maybe))
 
+(use-package anki-editor
+  :ensure t
+  ;; http://blog.lujun9972.win/emacs-document/blog/2020/01/14/%E4%BD%BF%E7%94%A8emacs%EF%BC%8Corg-mode%EF%BC%8Canki-editor%E7%AD%89%E6%8F%92%E4%BB%B6%E5%90%AF%E5%8A%A8anki/index.html
+  :bind (:map org-mode-map
+              ("<f9>" . anki-editor-cloze-region-dont-incr))
+  :config
+  (defun anki-editor-cloze-region-dont-incr (&optional arg)
+    "Cloze region without hint using the previous card number."
+    (interactive)
+    (anki-editor-cloze-region arg "")))
+
 (provide 'init-local)
 ;;; init-local.el ends here
