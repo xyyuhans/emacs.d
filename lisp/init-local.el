@@ -148,5 +148,14 @@
 (use-package ess
   :ensure t)
 
+(use-package ox-reveal
+  :ensure t
+  :custom
+  (org-reveal-root "file:////home/xyyuhans/Documents/reveal.js")
+  ;; https://github.com/yjwen/org-reveal/issues/388#issuecomment-652182364
+  ;; Wrap <img> tag in a <figure> tag
+  (org-html-html5-fancy t)
+  (org-html-doctype "html5"))
+
 (provide 'init-local)
 ;;; init-local.el ends here
