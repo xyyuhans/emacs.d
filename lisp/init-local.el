@@ -72,5 +72,39 @@
          (file+headline org-my-anki-file "dispatch shelf")
          "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: foreign language\n:ANKI_DECK: English\n:END:\n** foreign language\n   %?\n** 意思\n** 例句\n   %x\n** 发音\n")))
 
+;; https://github.com/org-roam/org-roam
+(use-package org-roam
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "~/Syncthing/backup/orgroam")
+  ;; disable property auto insert
+  ;; https://github.com/org-roam/org-roam/pull/1030
+  ;; https://github.com/org-roam/org-roam/issues/1029
+  (org-roam-enable-headline-linking nil)
+  ;; auto truncate
+  (org-startup-truncated nil)
+  :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph-show))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
+
+(use-package org-roam-server
+  :ensure t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-export-inline-images t
+        org-roam-server-authenticate nil
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+
 (provide 'init-local)
 ;;; init-local.el ends here
