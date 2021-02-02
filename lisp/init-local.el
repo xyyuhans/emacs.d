@@ -213,5 +213,10 @@
   ;; https://depp.brause.cc/nov.el/
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
+(use-package org-ref
+  :ensure t
+  :config
+  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
+
 (provide 'init-local)
 ;;; init-local.el ends here
