@@ -54,6 +54,7 @@ site-lisp/package/
 /.lsp-session-v1
 /smex-items
 /eln-cache/
+/request/curl-cookie-jar
 /org-roam.db
 /nov-places
 /.last-package-update-day
