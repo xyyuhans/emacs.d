@@ -106,5 +106,11 @@
         org-roam-server-network-label-truncate-length 60
         org-roam-server-network-label-wrap-length 20))
 
+;; https://github.com/tumashu/cnfonts
+(use-package cnfonts
+  :ensure t
+  :config
+  (cnfonts-enable))
+
 (provide 'init-local)
 ;;; init-local.el ends here
