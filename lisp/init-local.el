@@ -140,5 +140,13 @@
   (org-wild-notifier-mode)
   (setq alert-default-style 'libnotify))
 
+;; r markdown support
+(use-package poly-R
+  :ensure t)
+
+;; to use poly-R
+(use-package ess
+  :ensure t)
+
 (provide 'init-local)
 ;;; init-local.el ends here
