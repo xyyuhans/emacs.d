@@ -1,3 +1,0 @@
-[submodule "eaf"]
-	path = site-lisp/emacs-application-framework
-	url = https://github.com/manateelazycat/emacs-application-framework.git
