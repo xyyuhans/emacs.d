@@ -140,14 +140,6 @@
   (org-wild-notifier-mode)
   (setq alert-default-style 'libnotify))
 
-;; r markdown support
-(use-package poly-R
-  :ensure t)
-
-;; to use poly-R
-(use-package ess
-  :ensure t)
-
 (use-package ox-reveal
   :ensure t
   :custom
