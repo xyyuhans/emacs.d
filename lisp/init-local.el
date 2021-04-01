@@ -47,10 +47,13 @@
 (setq org-pretty-entities 1)
 ;; org agenda sort
 (setq org-agenda-sorting-strategy
-      '((agenda time-up priority-down habit-down user-defined-up effort-up category-keep)
+      '((agenda time-up scheduled-down deadline-up priority-down todo-state-up habit-down user-defined-up effort-up category-keep)
         (todo category-up effort-up)
         (tags category-up effort-up)
         (search category-up)))
+;; org agenda effort view
+;; https://emacs.stackexchange.com/questions/21380/show-sum-of-efforts-for-a-day-in-org-agenda-day-title
+(setq org-columns-default-format "%60ITEM(Task) %6Effort(Estim){:}")
 
 ;; org capture
 ;; https://www.zmonster.me/2018/02/28/org-mode-capture.html
