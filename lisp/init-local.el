@@ -213,6 +213,18 @@
   :config
   (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 
+(use-package org-journal
+  :ensure t
+  :config
+  (setq org-journal-dir "~/Syncthing/backup/orgjournal/")
+  (global-set-key (kbd "C-c j j") 'org-journal-new-entry)
+  ;; disable visual-line and enable org-startup-truncated
+  ;; https://stackoverflow.com/questions/29169210/how-to-disable-global-minor-mode-in-a-specified-major-mode
+  (add-hook 'org-journal-mode-hook (lambda () (visual-line-mode -1)))
+  (setq org-startup-truncated nil)
+  ;; to make use of TODO auto migrate
+  (setq org-journal-time-prefix "** TODO ")
+  (setq org-journal-file-format "%Y%m%d.org"))
 
 (provide 'init-local)
 ;;; init-local.el ends here
