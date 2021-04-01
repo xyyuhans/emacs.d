@@ -213,14 +213,6 @@
   :config
   (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 
-;; auto save
-(use-package real-auto-save
-  :ensure t
-  :config
-  ;; no global mode now
-  (add-hook 'org-mode-hook 'real-auto-save-mode)
-  (add-hook 'markdown-mode-hook 'real-auto-save-mode)
-  (add-hook 'python-mode-hook 'real-auto-save-mode))
 
 (provide 'init-local)
 ;;; init-local.el ends here
