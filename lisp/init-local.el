@@ -2,6 +2,12 @@
 ;;; Commentary:
 ;;; Code:
 
+;; package proxy
+(setq url-proxy-services
+      '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+        ("http" . "127.0.0.1:8119")
+        ("https" . "127.0.0.1:8119")))
+
 ;; auto install packages
 ;; https://emacs.stackexchange.com/questions/28932/how-to-automate-installation-of-packages-with-emacs-file
 (dolist (package '(use-package))
