@@ -37,6 +37,9 @@
 ;; https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell
 (setq process-connection-type nil)
 
+;; truncate
+(add-hook 'eww-after-render-hook '(lambda () (setq truncate-lines nil)))
+
 ;; org mode
 (setq org-default-notes-file "~/Nutstore Files/sync/orgmode/todo.org")
 (setq org-agenda-files '("~/Nutstore Files/sync/orgmode" "~/Nutstore Files/sync/orgmode/hidden" "~/Syncthing/backup/org"))
