@@ -62,24 +62,28 @@
         (search category-up)))
 ;; org agenda effort view
 ;; https://emacs.stackexchange.com/questions/21380/show-sum-of-efforts-for-a-day-in-org-agenda-day-title
-(setq org-columns-default-format "%60ITEM(Task) %6Effort(Estim){:}")
+;; (setq org-columns-default-format "%60ITEM(Task) %6Effort(Estim){:}")
+;; C-j will indent instead of enter
+(electric-indent-mode t)
 
 ;; org capture
 ;; https://www.zmonster.me/2018/02/28/org-mode-capture.html
 ;; http://blog.lujun9972.win/emacs-document/blog/2020/01/14/%E4%BD%BF%E7%94%A8emacs%EF%BC%8Corg-mode%EF%BC%8Canki-editor%E7%AD%89%E6%8F%92%E4%BB%B6%E5%90%AF%E5%8A%A8anki/index.html
 (setq org-my-anki-file "~/Syncthing/backup/org/anki.org")
 (setq org-capture-templates
-      `(("t" "todo" entry (file+headline "" "todo")
+      `(("t" "todo" entry (file+headline "" "todo")  ; "" => `org-default-notes-file'
          "* NEXT %?\n%U\n" :clock-resume t)
-        ("a" "anki basic"
+        ("n" "note" entry (file+headline "" "note")
+         "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
+        ("b" "anki basic"
          entry
          (file+headline org-my-anki-file "dispatch shelf")
          "* %<%H:%M> %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: 基础\n:ANKI_DECK: new\n:END:\n** 正面\n   %?\n** 背面\n   %x\n")
-        ("A" "anki cloze"
+        ("c" "anki cloze"
          entry
          (file+headline org-my-anki-file "dispatch shelf")
          "* %<%H:%M> %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: 填空题\n:ANKI_DECK: new\n:END:\n** 文字\n   %?%x\n** 额外的\n")
-        ("n" "anki English"
+        ("e" "anki English"
          entry
          (file+headline org-my-anki-file "dispatch shelf")
          "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: foreign language\n:ANKI_DECK: English\n:END:\n** foreign language\n   %?\n** 意思\n** 例句\n   %x\n** 发音\n")))
