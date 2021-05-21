@@ -250,6 +250,9 @@
 ;; auto save
 (use-package real-auto-save
   :ensure t
+(use-package org-download
+  :ensure t)
+
   :config
   ;; no global mode now
   (add-hook 'org-mode-hook 'real-auto-save-mode)
