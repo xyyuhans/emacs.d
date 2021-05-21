@@ -87,6 +87,14 @@
          entry
          (file+headline org-my-anki-file "dispatch shelf")
          "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: foreign language\n:ANKI_DECK: English\n:END:\n** foreign language\n   %?\n** 意思\n** 例句\n   %x\n** 发音\n")))
+;; my-org-delete-indentation
+;; not done yet, if the previous line is empty
+(defun my-org-delete-indentation ()
+  "Customized org-delete-indentation for Chinese."
+  (interactive)
+  (org-delete-indentation)
+  (org-delete-char 1))
+(global-set-key (kbd "C-M-^") 'my-org-delete-indentation)
 
 ;; https://github.com/org-roam/org-roam
 (use-package org-roam
