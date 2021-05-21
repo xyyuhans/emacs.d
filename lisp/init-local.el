@@ -45,9 +45,9 @@
 (add-hook 'eww-after-render-hook '(lambda () (setq truncate-lines nil)))
 
 ;; org mode
-(setq org-default-notes-file "~/Nutstore Files/sync/orgmode/todo.org")
+(setq org-default-notes-file "~/Nutstore Files/sync/orgmode/inbox.org")
 (setq org-agenda-files '("~/Nutstore Files/sync/orgmode" "~/Nutstore Files/sync/orgmode/hidden" "~/Syncthing/backup/org"))
-(setq org-archive-location "~/Nutstore Files/sync/orgmode/archive::")
+(setq org-archive-location "~/Syncthing/backup/org/archive::")
 ;; auto truncate
 ;; https://superuser.com/questions/299886/linewrap-in-org-mode-of-emacs/299897
 (setq org-startup-truncated nil)
@@ -69,28 +69,6 @@
 ;; (setq org-columns-default-format "%60ITEM(Task) %6Effort(Estim){:}")
 ;; C-j will indent instead of enter
 (electric-indent-mode t)
-
-;; org capture
-;; https://www.zmonster.me/2018/02/28/org-mode-capture.html
-;; http://blog.lujun9972.win/emacs-document/blog/2020/01/14/%E4%BD%BF%E7%94%A8emacs%EF%BC%8Corg-mode%EF%BC%8Canki-editor%E7%AD%89%E6%8F%92%E4%BB%B6%E5%90%AF%E5%8A%A8anki/index.html
-(setq org-my-anki-file "~/Syncthing/backup/org/anki.org")
-(setq org-capture-templates
-      `(("t" "todo" entry (file+headline "" "todo")  ; "" => `org-default-notes-file'
-         "* NEXT %?\n%U\n" :clock-resume t)
-        ("n" "note" entry (file+headline "" "note")
-         "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
-        ("b" "anki basic"
-         entry
-         (file+headline org-my-anki-file "dispatch shelf")
-         "* %<%H:%M> %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: 基础\n:ANKI_DECK: new\n:END:\n** 正面\n   %?\n** 背面\n   %x\n")
-        ("c" "anki cloze"
-         entry
-         (file+headline org-my-anki-file "dispatch shelf")
-         "* %<%H:%M> %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: 填空题\n:ANKI_DECK: new\n:END:\n** 文字\n   %?%x\n** 额外的\n")
-        ("e" "anki English"
-         entry
-         (file+headline org-my-anki-file "dispatch shelf")
-         "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: foreign language\n:ANKI_DECK: English\n:END:\n** foreign language\n   %?\n** 意思\n** 例句\n   %x\n** 发音\n")))
 ;; my-org-delete-indentation
 ;; not done yet, if the previous line is empty
 (defun my-org-delete-indentation ()
@@ -254,7 +232,110 @@
 (use-package org-download
   :ensure t)
 
+(use-package org-gtd
+  :ensure t
+  :after org
+  :demand t ;; without this, the package won't be loaded, so org-agenda won't be configured
+  :custom
+  ;; where org-gtd will put its files. This value is also the default one.
+  (org-gtd-directory "~/Nutstore Files/sync/orgmode/")
+  ;; package: https://github.com/Malabarba/org-agenda-property
+  ;; this is so you can see who an item was delegated to in the agenda
+  (org-agenda-property-list '("DELEGATED_TO"))
+  ;; I think this makes the agenda easier to read
+  (org-agenda-property-position 'next-line)
+  ;; package: https://www.nongnu.org/org-edna-el/
+  ;; org-edna is used to make sure that when a project task gets DONE,
+  ;; the next TODO is automatically changed to NEXT.
+  (org-edna-use-inheritance t)
   :config
+  (org-edna-load)
+  ;; remove all tag setting
+  ;; not scheduled for incubate, check it regularly
+  (defun org-gtd--incubate ()
+    "Process GTD inbox item by incubating it.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Refile to `org-gtd-incubate-file-basename'."
+    (org-gtd--clarify-item)
+    (goto-char (point-min))
+    (org-gtd--refile-incubate))
+  (defun org-gtd--quick-action ()
+    "Process GTD inbox item by doing it now.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Mark it as done and archive."
+    (org-gtd--clarify-item)
+    (goto-char (point-min))
+    (org-todo "DONE")
+    (org-archive-subtree))
+  ;; for short term (today or tomorrow)
+  (defun org-gtd--single-action ()
+    "Process GTD inbox item as a single action.
+Allow the user apply user-defined tags from
+`org-tag-persistent-alist', `org-tag-alist' or file-local tags in
+the inbox.  Set as a NEXT action and refile to
+`org-gtd-actionable-file-basename'."
+    (org-gtd--clarify-item)
+    (goto-char (point-min))
+    (org-schedule 0)
+    (org-refile nil nil (org-gtd--refile-target org-gtd-actions)))
+  :bind
+  (("C-c d c" . org-gtd-capture) ;; add item to inbox
+   ("C-c d a" . org-agenda-list) ;; see what's on your plate today
+   ("C-c d p" . org-gtd-process-inbox) ;; process entire inbox
+   ("C-c d n" . org-gtd-show-all-next) ;; see all NEXT items
+   ("C-c d s" . org-gtd-show-stuck-projects)) ;; see projects that don't have a NEXT item
+  :init
+  (bind-key "C-c d d" 'org-gtd-clarify-finalize)) ;; the keybinding to hit when you're done editing an item in the processing phase
+
+(use-package org-agenda
+  :ensure nil ;; this is how you tell use-package to manage a sub-package
+  :after org-gtd ;; because we need to add the org-gtd directory to the agenda files
+  :custom
+  ;; use as-is if you don't have an existing org-agenda setup
+  ;; otherwise push the directory to the existing list
+  ;; a useful view to see what can be accomplished today
+  (org-agenda-custom-commands '(("g" "Scheduled today and all NEXT items" ((agenda "" ((org-agenda-span 1))) (todo "NEXT"))))))
+
+(use-package org-capture
+  :ensure nil
+  ;; note that org-gtd has to be loaded before this
+  :after org-gtd
+  :config
+  ;; use as-is if you don't have an existing set of org-capture templates
+  ;; otherwise add to existing setup
+  ;; you can of course change the letters, too
+  ;;
+  ;; https://www.zmonster.me/2018/02/28/org-mode-capture.html
+  ;; http://blog.lujun9972.win/emacs-document/blog/2020/01/14/%E4%BD%BF%E7%94%A8emacs%EF%BC%8Corg-mode%EF%BC%8Canki-editor%E7%AD%89%E6%8F%92%E4%BB%B6%E5%90%AF%E5%8A%A8anki/index.html
+  (setq org-my-anki-file "~/Syncthing/backup/org/anki.org")
+  (setq org-capture-templates
+        `(
+          ("i" "Inbox"
+           entry (file ,(org-gtd--path org-gtd-inbox-file-basename))
+           "* %?\n%U\n\n  %i"
+           :kill-buffer t)
+          ("l" "Todo with link"
+           entry (file ,(org-gtd--path org-gtd-inbox-file-basename))
+           "* %?\n%U\n\n  %i\n  %a"
+           :kill-buffer t)
+          ;; ("t" "todo" entry (file+headline "" "todo") ; "" => `org-default-notes-file'
+          ;;  "* NEXT %?\n%U\n" :clock-resume t)
+          ;; ("n" "note" entry (file+headline "" "note")
+          ;;  "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
+          ("b" "anki basic"
+           entry
+           (file+headline org-my-anki-file "dispatch shelf")
+           "* %<%H:%M> %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: 基础\n:ANKI_DECK: new\n:END:\n** 正面\n   %?\n** 背面\n   %x\n")
+          ("c" "anki cloze"
+           entry
+           (file+headline org-my-anki-file "dispatch shelf")
+           "* %<%H:%M> %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: 填空题\n:ANKI_DECK: new\n:END:\n** 文字\n   %?%x\n** 额外的\n")
+          ("e" "anki English"
+           entry
+           (file+headline org-my-anki-file "dispatch shelf")
+           "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: foreign language\n:ANKI_DECK: English\n:END:\n** foreign language\n   %?\n** 意思\n** 例句\n   %x\n** 发音\n"))))
 
 (provide 'init-local)
 ;;; init-local.el ends here
