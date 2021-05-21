@@ -33,6 +33,10 @@
 ;; https://stackoverflow.com/questions/1480572/how-to-have-emacs-auto-refresh-all-buffers-when-files-have-changed-on-disk
 (global-auto-revert-mode t)
 
+;; auto save
+;; https://www.emacswiki.org/emacs/AutoSave#h5o-4
+(auto-save-visited-mode)
+
 ;; make xdg-open works
 ;; https://emacs.stackexchange.com/questions/19344/why-does-xdg-open-not-work-in-eshell
 (setq process-connection-type nil)
