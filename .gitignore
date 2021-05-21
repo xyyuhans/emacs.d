@@ -58,3 +58,4 @@ site-lisp/package/
 /org-roam.db
 /nov-places
 /.last-package-update-day
+/srecode-map.el
