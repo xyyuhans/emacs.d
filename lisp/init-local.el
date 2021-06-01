@@ -32,6 +32,7 @@
 ;; auto reload files
 ;; https://stackoverflow.com/questions/1480572/how-to-have-emacs-auto-refresh-all-buffers-when-files-have-changed-on-disk
 (global-auto-revert-mode t)
+(setq auto-save-visited-interval 60)
 
 ;; auto save
 ;; https://www.emacswiki.org/emacs/AutoSave#h5o-4
