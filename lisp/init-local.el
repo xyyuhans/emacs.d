@@ -338,5 +338,10 @@ the inbox.  Set as a NEXT action and refile to
            (file+headline org-my-anki-file "dispatch shelf")
            "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: foreign language\n:ANKI_DECK: English\n:END:\n** foreign language\n   %?\n** 意思\n** 例句\n   %x\n** 发音\n"))))
 
+(use-package activity-watch-mode
+  :ensure t
+  :config
+  (global-activity-watch-mode))
+
 (provide 'init-local)
 ;;; init-local.el ends here
